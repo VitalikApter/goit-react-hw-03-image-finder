@@ -1,26 +1,48 @@
+import PropTypes from 'prop-types';
 import { Component } from 'react';
-
-import css from './Searchbar.module.css';
+import css from './Searchbar.module.scss';
 
 class Searchbar extends Component {
-  state = {
-    items: [],
-  };
 
+    state = {
+      searchQuery: '',
+    };
+
+    static propTypes = {
+        onSubmit: PropTypes.func.isRequired,
+      };
+
+  
+    onSearchInput = evt => {
+      this.setState({ [evt.currentTarget.name]: evt.currentTarget.value });
+    };
+  
+    handleSubmit = evt => {
+      evt.preventDefault();
+  
+      if (!this.state.searchQuery.trim()) {
+        return alert('Empty query. Please input something for search');
+      }
+  
+      this.props.onSubmit(this.state.searchQuery);
+    };
   render() {
     return (
-        <header className={css.Searchbar}>
-        <form className={css.SearchForm}>
-          <button type="submit" className={css.Button}>
-            <span className={css.SearchForm-button-label}>Search</span>
+      <header className={css.Searchbar}>
+        <form className={css.SearchForm} onSubmit={this.handleSubmit}>
+          <button type="submit" className={css.SearchFormButton}>
+            <span className={css.SearchFormButtonLabel}></span>
           </button>
-      
+
           <input
-            className={css.input}
+            className={css.SearchFormInput}
             type="text"
-            autocomplete="off"
-            autofocus
+            name="searchQuery"
+            autoComplete="off"
+            autoFocus
             placeholder="Search images and photos"
+            value={this.state.searchQuery}
+            onChange={this.onSearchInput}
           />
         </form>
       </header>
